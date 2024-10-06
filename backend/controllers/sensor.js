@@ -23,3 +23,12 @@ exports.createSensorsdata = async (req, res, next) => {
     const sensordatas = await SensorData.create(req.body)
     res.status(201).json({success: true, data: sensordatas})
 }
+
+//@desc     Delete all datasensor
+//@route    DELETE /api/v1/sensor
+//@access   Public
+exports.deleteAllSensorsdata = async (req, res, next) => {
+    // console.log(req.body)
+    await SensorData.deleteMany({});
+    res.status(200).json({success: true})
+}

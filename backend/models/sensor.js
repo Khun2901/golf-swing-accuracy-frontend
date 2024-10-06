@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const sensorDataSchema = new mongoose.Schema({
     timestamp: {
         type: Date,
-        required: [true, "Please add an timestamp"]
+        required: [true, "Please add an timestamp."]
     },
-    velocity:{
+    distanceError:{
         type: Number,
-        required: [true, "Please add an velocity"]
+        required: [true,"Please add an distance error."]
     }
 });
 
-module.exports = mongoose.model("SensorData",sensorDataSchema);
+module.exports = mongoose.model("SensorData", sensorDataSchema);

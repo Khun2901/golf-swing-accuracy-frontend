@@ -28,6 +28,7 @@ app.use('/api/v1/sensors', sensors)
 // MQTT client setup
 const mqttClient = mqtt.connect('mqtt://192.168.1.34'); // Replace with your MQTT broker URL
 const topic = 'realtime/data'; // Replace with your topic
+const topic2 = 'ml/data';
 
 // MQTT subscription
 mqttClient.on('connect', () => {
@@ -35,6 +36,11 @@ mqttClient.on('connect', () => {
   mqttClient.subscribe(topic, (err) => {
     if (!err) {
       console.log(`Subscribed to topic: ${topic}`);
+    }
+  });
+  mqttClient.subscribe(topic2, (err) => {
+    if (!err) {
+      console.log(`Subscribed to topic: ${topic2}`);
     }
   });
 });
