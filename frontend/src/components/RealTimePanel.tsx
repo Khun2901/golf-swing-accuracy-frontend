@@ -1,20 +1,32 @@
 'use client';
 
-import { Divider } from "antd";
+import { Divider, Input } from "antd";
 import AccelerationMonitor from "./AccelerationMonitor";
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import StatisticMonitor from "./StatisticMonitor";
+import PerformanceSubmitForm from "./PerformanceSubmitForm";
 
 interface ISocketValues {
-    timestamp?: Date;
+    timestamp: Date;
     velocity?: number;
-}
+    result?: string;
+} 
 
 export default function RealTimePanel() {
-    const [socketValues, setSocketValues] = useState<ISocketValues | null>(null);
+    // const [socketValues, setSocketValues] = useState<ISocketValues | null>(null);
     const [velocity, setVelocity] = useState<number>(0);
-    const [smashFactor, setSmashFactor] = useState<number>(1.1);
+    const [ballSpeed, setBallSpeed] = useState<number>(0);
+    const [distance, setDistance] = useState<number>(0); 
+    const [unknownFactor, setUnknownFactor] = useState<number>(5.8)
+    const [golfer, setGolfer] = useState<string>("")
+    const smashFactor = 1.5
+
+    const calculateDistance = (velocity: number) => {
+        const distanceFromVelocity = (((velocity * 1.5) ** 2) / (2 * 0.13 * 9.81)) * 3.28084
+        setDistance(distanceFromVelocity)
+        return distanceFromVelocity
+    }
 
     useEffect(() => {
         // Create Socket.io client instance
@@ -30,7 +42,15 @@ export default function RealTimePanel() {
 
             try {
                 const parsedData: ISocketValues = JSON.parse(data); // Parse the incoming data
-                setVelocity(parsedData.velocity || 0); // Update the velocity
+                console.log(parsedData)
+                if (!parsedData.velocity) {
+                    setGolfer(parsedData.result || "")
+                } else {
+                    setUnknownFactor(6.1 + (0.05 * (parsedData.velocity || 0)))
+                    setVelocity((parsedData.velocity || 0) / unknownFactor); // Update the velocity
+                    setBallSpeed((parsedData.velocity || 0) * smashFactor / (unknownFactor * 0.44704))
+                    setDistance(calculateDistance((parsedData.velocity || 0) / unknownFactor))
+                }
             } catch (error) {
                 console.error('Failed to parse data:', error);
             }
@@ -47,10 +67,11 @@ export default function RealTimePanel() {
     }, []);
 
     return (
-        <div className="mx-40 my-10 py-6 px-8 rounded-xl border-2 border-green-800 shadow-xl bg-gray-200">
+        <div className="w-[1200px] py-6 px-8 rounded-xl border-2 border-green-800 shadow-xl bg-gray-200">
             <div className="font-bold text-2xl text-green-800">Real - Time Performance</div>
             <Divider className="m-0 mt-2 border-green-800 border-[1px]" />
 
+            <div className="flex flex-col items-center">
                 <div className="flex flex-row justify-center mt-6">
                     
                     {/* Power Bar Monitoring */}
@@ -58,16 +79,19 @@ export default function RealTimePanel() {
 
                     {/* Other Values */}
                     <div>
-                        <StatisticMonitor title={'Ball Speed'} value={velocity * smashFactor} unit="mph" />
-                        <StatisticMonitor title={'Total Distance'} value={47.55} unit="ft"/>
+                        <StatisticMonitor title={'Ball Speed'} value={ballSpeed.toFixed(2)} unit="mph" />
+                        <StatisticMonitor title={'Sensor Distance'} value={(distance * 0.8).toFixed(2) + ' ~ ' + (distance * 1.2).toFixed(2)} unit="ft"/>
                     </div>
 
                     <div>
-                        <StatisticMonitor title={'Roll Distance'} value={17.55} unit="ft"/>
-                        <StatisticMonitor title={'Carry Distance'} value={30.00} unit="ft"/>
+                        <StatisticMonitor title={'Golfer\'s Swing Style'} value={golfer || '---'} unit=""/>
                     </div>
 
                 </div>
+
+                <PerformanceSubmitForm minDistance={distance * 0.8} maxDistance={distance * 1.2} />
+
+            </div>
         </div>
     );
 }

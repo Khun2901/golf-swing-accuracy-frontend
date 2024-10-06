@@ -28,7 +28,7 @@ export default function ClubHeadSpeedMonitor(props: CiubHeadSpeedProps) {
                     }}
                 >
                     <div className='flex flex-row justify-start'>
-                        <Statistic title="Velocity" value={props.velocity.toFixed(2)}  suffix="mph" className='p-4'/>
+                        <Statistic title="Velocity" value={(props.velocity / 0.44704).toFixed(2)} suffix="mph" className='p-4'/>
                     </div>
                 </ConfigProvider>
             </div>

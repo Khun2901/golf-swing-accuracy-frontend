@@ -39,7 +39,7 @@ export default function PowerBar(props: PowerBarProps) {
                 labels: [""],
                 datasets: [
                     {
-                        data: [props.value],
+                        data: [props.value * 1.5],
                         backgroundColor: [getColor(props.value)],
                         borderWidth: 0,
                         borderRadius: 3,
@@ -92,7 +92,7 @@ export default function PowerBar(props: PowerBarProps) {
                             min: 0,
                             max: 100,
                             ticks: {
-                                stepSize: 50,
+                                stepSize: 25,
                                 font: {
                                     family: 'Roboto Condensed, sans-serif',
                                     size: 14,
@@ -107,7 +107,7 @@ export default function PowerBar(props: PowerBarProps) {
                             display: false,
                         },
                         tooltip: {
-                            enabled: true,
+                            enabled: false,
                         },
                         datalabels: props.showDataLabels
                             ? {
