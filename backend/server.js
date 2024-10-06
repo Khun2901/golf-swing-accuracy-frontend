@@ -2,17 +2,31 @@ const express = require('express');
 const http = require('http');
 const mqtt = require('mqtt');
 const cors = require('cors');
+const connectDB = require('./config/db')
+
+const sensors = require('./routes/sensor')
+
+require("dotenv").config({ path: "./config/.env" });
+
+//Connect to database
+connectDB();
 
 // Create an Express app
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server, {cors: {origin: "*"}});
 
+
 // Use CORS middleware allow every request to the server
 app.use(cors());
 
+// Body Parser
+app.use(express.json())
+
+app.use('/api/v1/sensors', sensors)
+
 // MQTT client setup
-const mqttClient = mqtt.connect('mqtt://localhost'); // Replace with your MQTT broker URL
+const mqttClient = mqtt.connect('mqtt://192.168.1.34'); // Replace with your MQTT broker URL
 const topic = 'realtime/data'; // Replace with your topic
 
 // MQTT subscription
