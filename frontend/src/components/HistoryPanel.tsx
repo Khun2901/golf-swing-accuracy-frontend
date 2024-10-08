@@ -62,7 +62,7 @@ export default function HistoryPanel() {
                         <ScoreCard 
                             title={'Score'} 
                             value={getScore(distanceErrorArray)} 
-                            maxValue={distanceErrorArray.length} 
+                            maxValue={distanceErrorArray.length}
                             refresh={refresh} />
 
                         {/* Button Panel */}

@@ -26,7 +26,7 @@ app.use(express.json())
 app.use('/api/v1/sensors', sensors)
 
 // MQTT client setup
-const mqttClient = mqtt.connect('mqtt://192.168.1.34'); // Replace with your MQTT broker URL
+const mqttClient = mqtt.connect('mqtt://172.20.10.5'); // Replace with your MQTT broker URL
 const topic = 'realtime/data'; // Replace with your topic
 const topic2 = 'ml/data';
 
