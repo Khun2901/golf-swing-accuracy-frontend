@@ -20,7 +20,9 @@ export default function PerformanceSubmitForm(props: SubmissionProps) {
     const handleSubmit = async () => {
         try {
             const timestamp = new Date().toUTCString();
-            const distanceError = Math.min(Math.abs(props.maxDistance - expectedDistance), Math.abs(props.minDistance - expectedDistance))
+            const minDistanceError = Math.abs(props.minDistance - expectedDistance)
+            const maxDistanceError = Math.abs(props.maxDistance - expectedDistance)
+            const distanceError = maxDistanceError < minDistanceError ? maxDistanceError : minDistanceError
             const payload = {
                 timestamp: timestamp,
                 distanceError: distanceError

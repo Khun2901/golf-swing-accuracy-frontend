@@ -71,7 +71,7 @@ const golfers: Golfer[] = [
 		pic: './nelly_korda.png',
 	},
 	{
-		golfer: 'lydia',
+		golfer: 'lydra',
 		name: 'Lydia Ko',
 		pic: './lydia_ko.png',
 	},
